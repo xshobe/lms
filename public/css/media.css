@@ -1,0 +1,126 @@
+@charset "utf-8";
+/* CSS Document */
+input[type="submit"], input[type="button"], input[type="text"], input[type="password"], input[type="email"] , textarea { -webkit-border-radius:0; -webkit-appearance: none; font-size:100%; }
+input[type="checkbox"]  { -webkit-border-radius:0; }
+a[href^=tel] {text-decoration:inherit;/*color: inherit;*/}
+/* #Media Queries
+================================================== */
+/* Smaller than standard 960 (devices and browsers) */
+@media only screen and (max-width: 1201px) {
+body{ overflow-x:hidden;}
+
+}
+
+@media screen and (min-width:1024px) and (max-width: 1240px) {
+img {max-width:100%; }
+.row{ width:1000px;}
+.innerpad h3{left: -31px;}
+.col3 tr td:first-child { width: 30%;}
+.innerpad .col3 li , .innerpad .col4 li{ min-height: 90px;}
+.innerpad .captchali input[type="text"] { float: left; line-height: 35px; width: 40%;}
+.loaninfo .col5.loanul > li{width:59%;}
+
+}
+
+@media screen and (min-width:768px) and (max-width:1023px) {
+img {max-width:100%; }
+.row{ width:746px; }
+.mainmenu > a { padding: 0 9px;}
+.search { margin-left: 10px;}
+.formpad {width: 361px;}
+.forgot > a { font-weight: 500; margin-left: 0;}
+.formpad input[type="submit"]{padding: 6px 12px;}
+.addpad{width: 32%;}
+.latestnews{ width: 61%;}
+.innerpad .col4 li:nth-child(2n) , .innerpad .col3 li:nth-child(2n){ margin-right: 0;}
+.innerpad .col4 li , .innerpad .col3 li{ min-height: 70px; width: 49%;}
+.innerpad .col5 li:nth-child(2n) { margin-right: 0;}
+.innerpad .col5 li{ min-height: 70px; width: 48.5%;}
+.innerpad .col5 li:nth-child(5n){margin-right:2%;}
+.uploadli > label, .uploadli > font { float: none;}
+.file-upload-container { float: none; margin-left: 0;}
+.captchali > img{width: auto;}
+.innerpad h3{left: -26px;}
+#loan_history_wrapper .row:nth-child(2) .col-sm-12 { overflow: auto;}
+.fillstages{font-size: 17px;}
+.fillstages i {font-size: 24px;}
+.loaninfo .col5.loanul > li{width:79%;}
+
+}
+
+@media screen and (max-width:767px) {
+body { -webkit-text-size-adjust: none; }
+img {max-width:100%; }
+.row{ width:96%; }
+.logo { text-align: center; width: 100%;}
+.logo img { float: none;}
+.headright {width: 100%;}
+.headright > p:first-child{text-align:center;}
+.headright > p { text-align: left;}
+.formpad{margin: 50px 0 40px;}
+.latestnews { margin: 30px 0; width: 100%;}
+.addpad { padding: 4%; width: 92%;}
+.innerpad h3 { background-image: none; font-size: 16px;  left: -2%;}
+.innerpad h3 span { border-radius: 0 3px 3px 0; padding: 7px 13px 5px;}
+.innerpad .col4 li , .innerpad .col3 li{ min-height: 70px; width: 100%; margin-right:0;}
+h5 {margin-bottom: 0; margin-top: 10px;}
+.captchali > img{width:130px;}
+.innerpad .captchali input[type="text"]{line-height: 35px;}
+#loan_history_wrapper .row:nth-child(2) .col-sm-12 { overflow: auto;}
+#loan_history_length.dataTables_length {text-align: left;}
+#loan_history_filter.dataTables_filter { text-align: right;}
+.pagination { float: none !important; margin: 10px 0 !important; width: auto !important;}
+.innerpad .col5 li:nth-child(2n) { margin-right: 0;}
+.innerpad .col5 li{ min-height: 70px; width: 48.5%;}
+.innerpad .col5 li:nth-child(5n){margin-right:2%;}
+.loaninfo .col5.loanul > li { float: left; min-height: auto;  width: 79%;}
+}
+/* Mobile Landscape Size (devices and browsers) */
+@media screen and (max-width:639px) {
+.mainmenu > a {font-size: 12px;padding: 0 5px;}
+.search{  margin-left: 0;}
+.search input[type="text"]{width:125px;}
+.formpad{width: 334px;}
+.formpad td:first-child { width: 40%;}
+.formpad p { font-size: 14px; padding: 0;}
+p.forgot { float: left; padding-top: 5px; width: 100%;}
+.forgot > a { float: left; font-size: 13px; font-weight: 500; margin: 0; width: 100%;}
+.formpad input[type="submit"]{padding: 5px 13px;font-size: 15px;}
+.formpad td { padding: 5px;}
+#owl-demo .item { margin: 0 auto;  width: 70%;}
+.scince { float: left; margin: 0 0 20px;}
+.welcomepad > h1 { float: left; padding-bottom: 5px; width: 100%;}
+.welcomepad > p { float: left; padding-bottom: 5px;}
+.welcomepad .orangebtn { float: left;}
+.innerpad .col2 li{ min-height: 70px; width: 100%; margin-right:0;}
+.file-upload-container {margin-left: 0; width: 100%;}
+.btndiv > p { padding-top: 0;}
+.btndiv input{font-size: 16px;}
+.fillstages{font-size: 15px;}
+.loaninfo .col5.loanul > li { width: 95%;}
+}
+
+@media screen and (max-width:479px) {
+.headright p:first-child span { float: left; width: 100%;}
+p.mainmenu { float: left; text-align: center; width: 100%;}
+.mainmenu > a {font-size: 13px;}
+.search {margin-left: 0; width: 100%;}
+.search input[type="text"] {line-height: 37px;  padding: 0 15% 0 5%;  width: 80%;}
+.formpad { padding: 10px 10px 0; width: 286px;}
+.formpad td:first-child { width: 33%;}
+.scince { padding: 10px; width: 270px;}
+.scince > div {padding: 8px;}
+.innerbanner h1 { font-size: 30px;}
+.col3 tr td:first-child { width: 39%;}
+.btndiv > p { float: left;}
+.btndiv input { margin-bottom: 5px;}
+.scince font{font-size: 29px;}
+.ddsmoothmenu{padding-bottom:10px;}
+.innerpad .col5 li { margin-right:0; min-height: 70px; width: 100%;}
+.fillstages > span { border-bottom: 1px solid #777777; float: left; line-height: 14px; padding: 5%; width: 90%;}
+.fillstages i { display: none;}
+.loaninfo .loanul strong, .loaninfo .col5.loanul span {  padding: 2%;width: 96%;}
+.loaninfo .col5.loanul > li { width: 99%;}
+
+}
+

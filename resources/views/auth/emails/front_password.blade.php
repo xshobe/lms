@@ -1,0 +1,1 @@
+Click here to reset your password : <a href="{!! url('reset-password/'. $token) !!}">{!! url('reset-password/'. $token) !!}</a>

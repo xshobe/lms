@@ -1,0 +1,13 @@
+@page{margin:89px 50px;}
+body{border:1px solid #000;font-size:12px;}
+.header{position:fixed;left: 0px;top:-89px;right: 0px;height: 89px;border-bottom:3px solid #ef9f01;background:rgba(68,99,160,1);width:100%;background:-moz-linear-gradient(top,rgba(68,99,160,1) 0%,rgba(45,74,133,1) 100%);background:-webkit-gradient(left top,left bottom,color-stop(0%,rgba(68,99,160,1)),color-stop(100%,rgba(45,74,133,1)));background:-webkit-linear-gradient(top,rgba(68,99,160,1) 0%,rgba(45,74,133,1) 100%);background:-o-linear-gradient(top,rgba(68,99,160,1) 0%,rgba(45,74,133,1) 100%);background:-ms-linear-gradient(top,rgba(68,99,160,1) 0%,rgba(45,74,133,1) 100%);background:linear-gradient(to bottom,rgba(68,99,160,1) 0%,rgba(45,74,133,1) 100%);filter:progid:DXImageTransform.Microsoft.gradient(startColorstr='#4463a0',endColorstr='#2d4a85',GradientType=0);}
+.footer{position:fixed;left: 0px;bottom:-89px;right: 0px;height: 89px;}
+.footer .pagenum{text-align:right;}
+.footer .pagenum span:before{content:counter(page);}
+.row{width:96%;margin:0 auto;padding:0;}
+img{border:none;}
+table{border-collapse:collapse;color:#000;}
+table tr th,table tr td{border:1px solid rgba(239,159,1,0.6);padding:5px;}
+table tr th.head{background:rgba(239,159,1,0.4);font-weight:600;opacity:0.6;}
+table tr td.left{background:rgba(239,159,1,0.4);font-weight:600;width:50%;opacity:0.6;}
+table tr td.right{width:50%;}
