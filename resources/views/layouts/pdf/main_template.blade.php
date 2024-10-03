@@ -1,8 +1,11 @@
 <html>
+
 <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <meta http-equiv="Content-Security-Policy" content="upgrade-insecure-requests">
     <link rel="stylesheet" href="{!! asset('public/css/pdf-style.css') !!}" />
 </head>
+
 <body>
     <div class="header">
         <div class="logo">

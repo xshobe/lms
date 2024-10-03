@@ -4,6 +4,9 @@ namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
 use App\Http\Requests;
+use App\Library\ExcelReader;
+use App\Models\CustomersMasterModel;
+use App\Models\LoanDetailsModel;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
@@ -255,7 +258,10 @@ class AdminController extends Controller
 
         // Read payment excel file and check is the file correct format?
         $savingsList = \App\Library\ExcelReader::getSavingsPaymentList($request, 'file', 'storage/repayments/saving');
-        if (! isset($savingsList[0]) || ! isset($savingsList[0]['tpf_number']) || ! isset($savingsList[0]['amount']) || ! isset($savingsList[0]['date'])) {
+        if (
+            ! isset($savingsList->data) || ! isset($savingsList->data['tpf_number']) ||
+            ! isset($savingsList->data['amount']) || ! isset($savingsList->data['date'])
+        ) {
             $this->showError('file');
         }
 
@@ -267,32 +273,32 @@ class AdminController extends Controller
         foreach ($savingsList as $key => $row) {
             switch ($this->doSavingsPaymentUpdate($row, $settingObj)) {
                 case 'member_not_exist':
-                    $member_not_exist .= "<tr><td>The member account does not exist for TPF number <b>$row->tpf_number</b></td></tr>";
+                    $member_not_exist .= "<tr><td>The member account does not exist for TPF number <b>" . $row['tpf_number'] . "</b></td></tr>";
                     break;
 
                 case 'already_updated':
-                    $already_updated .= "<tr><td>Savings amount added already for TPF number <b>$row->tpf_number</b></td></tr>";
+                    $already_updated .= "<tr><td>Savings amount added already for TPF number <b>" . $row['tpf_number'] . "</b></td></tr>";
                     break;
 
                 case 'not_manageable':
-                    $not_manageable .= "<tr><td>Savings amount not managed to pay membership fee for TPF number <b>$row->tpf_number</b></td></tr>";
+                    $not_manageable .= "<tr><td>Savings amount not managed to pay membership fee for TPF number <b>" . $row['tpf_number'] . "</b></td></tr>";
                     break;
 
                 case 'success':
-                    $success .= "<tr><td>Savings amount worth ($row->amount) added successfully for TPF number <b>$row->tpf_number</b></td></tr>";
+                    $success .= "<tr><td>Savings amount worth (" . $row['amount'] . ") added successfully for TPF number <b>" . $row['tpf_number'] . "</b></td></tr>";
                     break;
             }
         }
 
         // The detailed payment updated report
         $succ_msg = $success . $member_not_exist . $not_manageable . $already_updated;
-        $this->showSuccess($succ_msg, count($savingsList));
+        $this->showSuccess($succ_msg, count((array) $savingsList));
     }
 
     private function doSavingsPaymentUpdate($row, $settingObj)
     {
         // Make sure customer account exist
-        $customerObj = \App\Models\CustomersMasterModel::where('tpf_number', '=', $row->tpf_number)->first();
+        $customerObj = \App\Models\CustomersMasterModel::where('tpf_number', '=', $row['tpf_number'])->first();
         if ($customerObj == NULL)
             return 'member_not_exist';
 
@@ -305,7 +311,7 @@ class AdminController extends Controller
 
         // Is the member paid membership fee?
         if ($customerObj->paid_membership_fee == 0) {
-            if ($row->amount < $settingObj->membership_fee)
+            if ($row['amount'] < $settingObj->membership_fee)
                 return 'not_manageable';
 
             // Add deduction log for membership fee
@@ -325,9 +331,9 @@ class AdminController extends Controller
         // Add savings log
         $savingsObj = new \App\Models\SavingsLogModel;
         $savingsObj->tpf_number = $customerObj->tpf_number;
-        $savingsObj->amount_paid = $row->amount;
+        $savingsObj->amount_paid = $row['amount'];
         $savingsObj->quarter = Input::get('quarter');
-        $savingsObj->created_at = $row->date;
+        $savingsObj->created_at = $row['date'];
         if ($savingsObj->save()) {
             // Update in customer master
             $savingsInfo = \App\Library\Payment::getTotalSavings($customerObj->tpf_number);
@@ -352,8 +358,11 @@ class AdminController extends Controller
         }
 
         // Read payment excel file and check is the file correct format?
-        $advanceList = \App\Library\ExcelReader::getAdvancePaymentList($request, 'file', 'storage/repayments/advance');
-        if (! isset($advanceList[0]) || ! isset($advanceList[0]['membershipno']) || ! isset($advanceList[0]['amount_deducted']) || ! isset($advanceList[0]['periodend'])) {
+        $advanceList = ExcelReader::getAdvancePaymentList($request, 'file', 'storage/repayments/advance');
+        if (
+            ! isset($advanceList->data) || ! isset($advanceList->data['membershipno']) || ! isset($advanceList->data['amount_deducted']) ||
+            ! isset($advanceList->data['periodend'])
+        ) {
             $this->showError('file');
         }
 
@@ -361,32 +370,32 @@ class AdminController extends Controller
         foreach ($advanceList as $key => $row) {
             switch ($this->doAdvancePaymentUpdate($row)) {
                 case 'member_not_exist':
-                    $member_not_exist .= "<tr><td>The member account does not exist for TPF number <b>$row->membershipno</b></td></tr>";
+                    $member_not_exist .= "<tr><td>The member account does not exist for TPF number <b>" . $row['membershipno'] . "</b></td></tr>";
                     break;
 
                 case 'not_manageable':
-                    $not_manageable .= "<tr><td>Advance repayment amount not enough to manage for TPF number <b>$row->membershipno</b></td></tr>";
+                    $not_manageable .= "<tr><td>Advance repayment amount not enough to manage for TPF number <b>" . $row['membershipno'] . "</b></td></tr>";
                     break;
 
                 case 'already_updated':
-                    $already_updated .= "<tr><td>Advance repayment already updated for TPF number <b>$row->membershipno</b></td></tr>";
+                    $already_updated .= "<tr><td>Advance repayment already updated for TPF number <b>" . $row['membershipno'] . "</b></td></tr>";
                     break;
 
                 case 'success':
-                    $success .= "<tr><td>Advance repayment updated successfully for TPF number <b>$row->membershipno</b></td></tr>";
+                    $success .= "<tr><td>Advance repayment updated successfully for TPF number <b>" . $row['membershipno'] . "</b></td></tr>";
                     break;
             }
         }
 
         // The detailed payment updated report
         $succ_msg = $success . $member_not_exist . $not_manageable . $already_updated;
-        $this->showSuccess($succ_msg, count($advanceList));
+        $this->showSuccess($succ_msg, count((array) $advanceList));
     }
 
     private function doAdvancePaymentUpdate($row)
     {
         // Make sure customer account exist
-        $customerObj = \App\Models\CustomersMasterModel::where('tpf_number', '=', $row->membershipno)->first();
+        $customerObj = CustomersMasterModel::where('tpf_number', '=', $row['membershipno'])->first();
         if ($customerObj == NULL)
             return 'member_not_exist';
 
@@ -413,16 +422,16 @@ class AdminController extends Controller
 
             // Check whether member paid enough amount?
             // if ($val->total_loan_amount > $row->amount_deducted)
-            if ($row->amount_deducted <= 0)
+            if ($row['amount_deducted'] <= 0)
                 return 'not_manageable';
 
             // Add payment log
             $paymentLogObj = new \App\Models\LoanPaymentLogModel;
             $paymentLogObj->loan_id = $val->loan_id;
             $paymentLogObj->tpf_number = $customerObj->tpf_number;
-            $paymentLogObj->amount_paid = $row->amount_deducted;
+            $paymentLogObj->amount_paid = $row['amount_deducted'];
             $paymentLogObj->quarter = Input::get('quarter');
-            $paymentLogObj->created_at = $row->periodend;
+            $paymentLogObj->created_at = $row['periodend'];
             if ($paymentLogObj->save()) {
                 // Update payment info
                 $amountPaid = \App\Library\Payment::getTotalRepaymentAmt($val->loan_id);
@@ -467,7 +476,7 @@ class AdminController extends Controller
                 $transactionObj = new \App\Models\LoanTransactionLogModel;
                 $transactionObj->loan_id = $val->loan_id;
                 $transactionObj->transaction = "Loan Repayment";
-                $transactionObj->amount = $row->amount_deducted;
+                $transactionObj->amount = $row['amount_deducted'];
                 $transactionObj->balance_amount = $amountToPay;
                 $transactionObj->created_at = date('Y-m-d H:i:s');
                 $transactionObj->save();
@@ -493,8 +502,9 @@ class AdminController extends Controller
         }
 
         // Read payment excel file and check is the file correct format?
-        $creditList = \App\Library\ExcelReader::getCreditPaymentList($request, 'file', 'storage/repayments/loan');
-        if (! isset($creditList[0]) || ! isset($creditList[0]['membershipno']) || ! isset($creditList[0]['amount_deducted']) || ! isset($creditList[0]['periodend'])) {
+        $creditList = ExcelReader::getCreditPaymentList($request, 'file', 'storage/repayments/loan');
+
+        if (! isset($creditList->data) || ! isset($creditList->data['membershipno']) || ! isset($creditList->data['amount_deducted']) || ! isset($creditList->data['periodend'])) {
             $this->showError('file');
         }
 
@@ -502,32 +512,32 @@ class AdminController extends Controller
         foreach ($creditList as $key => $row) {
             switch ($this->doCreditPaymentUpdate($row)) {
                 case 'member_not_exist':
-                    $member_not_exist .= "<tr><td>The member account does not exist for TPF number <b>$row->membershipno</b></td></tr>";
+                    $member_not_exist .= "<tr><td>The member account does not exist for TPF number <b>" . $row['membershipno'] . "</b></td></tr>";
                     break;
 
                 case 'not_manageable':
-                    $not_manageable .= "<tr><td>Loan repayment amount not enough to manage for TPF number <b>$row->membershipno</b></td></tr>";
+                    $not_manageable .= "<tr><td>Loan repayment amount not enough to manage for TPF number <b>" . $row['membershipno'] . "</b></td></tr>";
                     break;
 
                 case 'already_updated':
-                    $already_updated .= "<tr><td>Loan repayment already updated for TPF number <b>$row->membershipno</b></td></tr>";
+                    $already_updated .= "<tr><td>Loan repayment already updated for TPF number <b>" . $row['membershipno'] . "</b></td></tr>";
                     break;
 
                 case 'success':
-                    $success .= "<tr><td>Loan repayment updated successfully for TPF number <b>$row->membershipno</b></td></tr>";
+                    $success .= "<tr><td>Loan repayment updated successfully for TPF number <b>" . $row['membershipno'] . "</b></td></tr>";
                     break;
             }
         }
 
         // The detailed payment updated report
         $succ_msg = $success . $member_not_exist . $not_manageable . $already_updated;
-        $this->showSuccess($succ_msg, count($creditList));
+        $this->showSuccess($succ_msg, count((array) $creditList));
     }
 
     private function doCreditPaymentUpdate($row)
     {
         // Make sure customer account exist
-        $customerObj = \App\Models\CustomersMasterModel::where('tpf_number', '=', $row->membershipno)->first();
+        $customerObj = \App\Models\CustomersMasterModel::where('tpf_number', '=', $row['membershipno'])->first();
         if ($customerObj == NULL)
             return 'member_not_exist';
 
@@ -552,16 +562,16 @@ class AdminController extends Controller
                 continue;
             }
 
-            if ($val->per_term_amount > $row->amount_deducted)
+            if ($val->per_term_amount > $row['amount_deducted'])
                 return 'not_manageable';
 
             // Add payment log
             $paymentLogObj = new \App\Models\LoanPaymentLogModel;
             $paymentLogObj->loan_id = $val->loan_id;
             $paymentLogObj->tpf_number = $customerObj->tpf_number;
-            $paymentLogObj->amount_paid = $row->amount_deducted;
+            $paymentLogObj->amount_paid = $row['amount_deducted'];
             $paymentLogObj->quarter = Input::get('quarter');
-            $paymentLogObj->created_at = $row->periodend;
+            $paymentLogObj->created_at = $row['periodend'];
             if ($paymentLogObj->save()) {
                 // Update payment info
                 $amountPaid = \App\Library\Payment::getTotalRepaymentAmt($val->loan_id);
@@ -593,7 +603,7 @@ class AdminController extends Controller
                 $transactionObj = new \App\Models\LoanTransactionLogModel;
                 $transactionObj->loan_id = $val->loan_id;
                 $transactionObj->transaction = "Loan Repayment";
-                $transactionObj->amount = $row->amount_deducted;
+                $transactionObj->amount = $row['amount_deducted'];
                 $transactionObj->balance_amount = $amountToPay;
                 $transactionObj->created_at = date('Y-m-d H:i:s');
                 $transactionObj->save();
@@ -635,7 +645,7 @@ class AdminController extends Controller
             $i++;
         }
 
-        \App\Library\ExcelReader::generateAdvanceRepaymentList($paymentsList);
+        return ExcelReader::generateAdvanceRepaymentList($paymentsList);
     }
 
     public function generateCreditPaymentList()
@@ -668,7 +678,7 @@ class AdminController extends Controller
             $i++;
         }
 
-        \App\Library\ExcelReader::generateCreditRepaymentList($paymentsList);
+        return ExcelReader::generateCreditRepaymentList($paymentsList);
     }
 
     public function getTotalLoans()
@@ -676,7 +686,7 @@ class AdminController extends Controller
         $paginate_length = Config::get('constants.paginate_length');
 
         $this->data['page_title'] = Config::get('constants.app_slug_name') . ' Loans';
-        $this->data['total_loans'] = \App\Models\LoanDetailsModel::leftJoin('loan_approved', 'loan_master.id', '=', 'loan_approved.loan_id')->whereIn('loan_master.status', [1, 3])->orderBy('created_at', 'desc')->paginate($paginate_length);
+        $this->data['total_loans'] = LoanDetailsModel::leftJoin('loan_approved', 'loan_master.id', '=', 'loan_approved.loan_id')->whereIn('loan_master.status', [1, 3])->orderBy('created_at', 'desc')->paginate($paginate_length);
         return view('admin.total_loans')->with($this->data);
     }
 
@@ -747,28 +757,28 @@ class AdminController extends Controller
             }
 
             foreach ($membersList as $key => $row) {
-                $customerObj = \App\Models\CustomersMasterModel::where('tpf_number', '=', $row->membership_no)->first();
+                $customerObj = \App\Models\CustomersMasterModel::where('tpf_number', '=', $row['membership_no'])->first();
                 if ($customerObj == NULL) {
                     $customer = new \App\Models\CustomersMasterModel;
-                    $customer->first_name = trim($row->surnames);
-                    $customer->last_name = trim($row->given_names);
+                    $customer->first_name = trim($row['surnames']);
+                    $customer->last_name = trim($row['given_names']);
 
                     $customer->gender = 0;
-                    if (strtolower($row->sex) == 'female') {
+                    if (strtolower($row['sex']) == 'female') {
                         $customer->gender = 1;
                     }
 
                     $customer->dob = '0000-00-00';
-                    if ($row->dob != 'N/A' && strpos(strtolower($row->dob), 'yr') === false) {
-                        $temp_str = str_replace('.', '-', $row->dob);
+                    if ($row['dob'] != 'N/A' && strpos(strtolower($row['dob']), 'yr') === false) {
+                        $temp_str = str_replace('.', '-', $row['dob']);
                         $customer->dob = date('Y-m-d', strtotime($temp_str));
-                    } else if ($row->dob == 'N/A' && $row->age != 'N/A') {
-                        $year = date('Y') - intval($row->age);
+                    } else if ($row['dob'] == 'N/A' && $row['age'] != 'N/A') {
+                        $year = date('Y') - intval($row['age']);
                         $customer->dob = $year . '-01-01';
                     }
 
-                    if ($row->age != 'N/A') {
-                        $customer->current_age = intval($row->age);
+                    if ($row['age'] != 'N/A') {
+                        $customer->current_age = intval($row['age']);
                     }
 
                     $customer->contact = trim($row->home_address);

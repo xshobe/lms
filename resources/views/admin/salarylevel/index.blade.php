@@ -33,7 +33,7 @@
                                 <th>Eligibility</th>
                                 <th>Interest(%)</th>
                                 <!--    <th>Interest amount</th>
-                                                     <th>total to be repaid</th> -->
+                                                                                     <th>total to be repaid</th> -->
                                 <th>Status</th>
                                 <th>Created Date</th>
                                 <th>Action</th>
@@ -47,7 +47,7 @@
                                         <td>{{ $val->eligibility }}</td>
                                         <td>{{ $val->interest }}</td>
                                         <!-- <td>{{ $val->interest_amount }}</td>
-                                                    <td>{{ $val->total_to_be_repaid }}</td> -->
+                                                                                    <td>{{ $val->total_to_be_repaid }}</td> -->
                                         <td>{{ $status[$val->status] }}</td>
                                         <td>{{ date('d-m-Y', strtotime($val->created_at)) }}</td>
                                         <td>

@@ -56,6 +56,11 @@
                             @endforelse
                         </tbody>
                     </table>
+                    @if ($customers->hasPages())
+                        <div class="pagination-wrapper" style="text-align: end;">
+                            {{ $customers->links('pagination::bootstrap-5') }}
+                        </div>
+                    @endif
                 </div>
             </div>
         </div>

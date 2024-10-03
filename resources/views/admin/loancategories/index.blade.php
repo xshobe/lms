@@ -57,9 +57,6 @@
                                                     'data-target' => '#confirm-delete',
                                                     'data-toggle' => 'modal',
                                                 ]) !!}
-
-
-
                                                 {!! Form::close() !!}
                                             </div>
 
@@ -78,9 +75,9 @@
                 "aoColumnDefs": [{
                     "bSortable": false,
                     "aTargets": [3]
-                }]
+                }],
+ 
             });
-
         });
     </script>
 @endsection

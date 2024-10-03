@@ -19,13 +19,14 @@ class CustomerController extends Controller
      */
     public function index()
     {
-        $customerObj=new \App\Models\CustomersMasterModel;
+        $customerObj = new \App\Models\CustomersMasterModel;
         $customerObj->get_vars();
 
-        $this->data['customerObj']=$customerObj;
-        $this->data['customers']=$customerObj::all()->sortByDesc('id');
-        $this->data['page_title']='Manage Members';
-        return view('admin.customers.index')->with($this->data);
+        return view('admin.customers.index')->with([
+            'customerObj' => $customerObj,
+            'customers' => $customerObj::orderByDesc('id')->paginate(1000),
+            'page_title' => 'Manage Members',
+        ]);
     }
 
     /**
@@ -65,7 +66,7 @@ class CustomerController extends Controller
             case '7':
                 $category = '1';
                 break;
-            
+
             default:
                 $category = NULL;
                 break;
@@ -85,27 +86,24 @@ class CustomerController extends Controller
         $customer = new \App\Models\CustomersMasterModel;
         $validator = Validator::make($request->all(), [
             'customer_category' => 'required',
-            'tpf_number' => 'required|numeric|unique:'.$customer->table.',tpf_number,NULL,id,deleted_at,NULL',
+            'tpf_number' => 'required|numeric|unique:' . $customer->table . ',tpf_number,NULL,id,deleted_at,NULL',
             'salary_level' => 'required',
             'first_name' => 'required|regex:/(^[A-Za-z ]+$)+/',
             'last_name' => 'required|regex:/(^[A-Za-z ]+$)+/',
-            'email' => 'email|unique:'.$customer->table.',email,NULL,id,deleted_at,NULL',
+            'email' => 'email|unique:' . $customer->table . ',email,NULL,id,deleted_at,NULL',
             'dob' => 'required',
             'mobile' => 'numeric',
             'bank_type' => 'required',
             'account_no' => 'required|numeric',
-            'retirement_date'=>'required',
+            'retirement_date' => 'required',
             'profile_image' => 'mimes:jpg,jpeg,png'
         ]);
         $this->validateTpf($validator, $request);
 
         // Run validation
-        if ($validator->fails())
-        {
+        if ($validator->fails()) {
             return redirect()->back()->withErrors($validator)->withInput();
-        }
-        else
-        {
+        } else {
             // Store customer details
             $customer->first_name = $request->input('first_name');
             $customer->last_name = $request->input('last_name');
@@ -121,22 +119,20 @@ class CustomerController extends Controller
             $customer->bank_id = $request->input('bank_type');
             $customer->account_no = $request->input('account_no');
             $customer->job_title = $request->input('job_title');
-			$customer->ministry = $request->input('ministry');
+            $customer->ministry = $request->input('ministry');
             $customer->school = $request->input('school');
-			$customer->retirement_date = $this->sanitizeDate($request->input('retirement_date'));
-			$customer->register_date = $this->sanitizeDate($request->input('register_date'));
+            $customer->retirement_date = $this->sanitizeDate($request->input('retirement_date'));
+            $customer->register_date = $this->sanitizeDate($request->input('register_date'));
             $customer->width_date = $this->sanitizeDate($request->input('width_date'));
             $customer->status = '1';
 
-            if($customer->save())
-            {
+            if ($customer->save()) {
                 // Let add customer beneficiaries
                 $aBeneficiary = $request->input('beneficiary');
                 $aRelationship = $request->input('relationship');
                 $aPortion = $request->input('portion');
                 $totalLength = count($aBeneficiary);
-                for ($i=0; $i<$totalLength; $i++)
-                {
+                for ($i = 0; $i < $totalLength; $i++) {
                     $beneficiaryObj = new \App\Models\BeneficiaryModel;
                     $beneficiaryObj->customer_id = $customer->id;
                     $beneficiaryObj->beneficiary = $aBeneficiary[$i];
@@ -148,7 +144,7 @@ class CustomerController extends Controller
                 // Upload member profile picture
                 $profile_image = $this->handleUpload($request, $customer->id);
                 \App\Models\CustomersMasterModel::where('id', '=', $customer->id)->update(['profile_image' => $profile_image]);
-                
+
                 Session::flash('flash_message', 'Member added successfully!');
                 return redirect('admin/customers');
             }
@@ -163,16 +159,16 @@ class CustomerController extends Controller
      */
     public function show($id)
     {
-        if ( ! ($customerObj = \App\Models\CustomersMasterModel::find(intval($id))))
+        if (! ($customerObj = \App\Models\CustomersMasterModel::find(intval($id))))
             return redirect('admin/customers');
-        
+
         // Pre-load customer related data
         $customerObj->get_vars();
-        
+
         $this->data['customerObj'] = $customerObj;
         $this->data['loanMasterObj'] = new \App\Models\LoanDetailsModel;
-        $this->data['page_title'] = 'Details of '. getCustomerName($customerObj);
-        
+        $this->data['page_title'] = 'Details of ' . getCustomerName($customerObj);
+
         $savingsAmount = ($customerObj->savings_amount != '') ? $customerObj->savings_amount : 0;
         $this->data['savings_amt'] = numberFormat($savingsAmount);
         // $this->data['loanFee']=\App\Models\LoanDetailsModel::join('loan_approved', 'loan_master.id', '=', 'loan_approved.loan_id')->where('loan_master.customer_id', '=', $customerObj->id)->sum('loan_fee');
@@ -184,13 +180,13 @@ class CustomerController extends Controller
         $customerLoans = $customerObj->getCustomerLoanDetails($customerObj->id, 'approved_loans');
         $customerAdvances = $customerObj->getCustomerLoanDetails($customerObj->id, 'approved_advances');
         $generalLoanInfo = $customerObj->calculateLoanAmt($customerLoans, $customerAdvances);
-        
+
         $this->data['customer_loans'] = $customerLoans;
         $this->data['customer_advances'] = $customerAdvances;
         $this->data['generalLoanInfo'] = $generalLoanInfo;
         $this->data['maxAllowedAmt'] = $customerObj->getMaxAllowedAmt($this->data['savings_amt'], $generalLoanInfo['allLoanInfo']['amt_to_pay']);
 
-        return view('admin.customers.show')->with($this->data); 
+        return view('admin.customers.show')->with($this->data);
     }
 
     /**
@@ -201,15 +197,15 @@ class CustomerController extends Controller
      */
     public function edit($id)
     {
-        if( ! ($model = \App\Models\CustomersMasterModel::find(intval($id))))
+        if (! ($model = \App\Models\CustomersMasterModel::find(intval($id))))
             return redirect('admin/customers');
-        
+
         $model->get_vars();
-        
+
         // Html view page content
         $this->data['model'] = $model;
         $this->data['beneficiaries'] = \App\Models\BeneficiaryModel::where('customer_id', '=', $model->id)->get();
-        $this->data['page_title'] = 'Edit User - '. $model->first_name .' '. $model->last_name;
+        $this->data['page_title'] = 'Edit User - ' . $model->first_name . ' ' . $model->last_name;
         return view('admin.customers.edit')->with($this->data);
     }
 
@@ -228,22 +224,19 @@ class CustomerController extends Controller
             'salary_level' => 'required',
             'first_name' => 'required|regex:/(^[A-Za-z ]+$)+/',
             'last_name' => 'required|regex:/(^[A-Za-z ]+$)+/',
-            'email' => 'email|unique:'.$model->table.',email,'.$id .',id,deleted_at,NULL',
+            'email' => 'email|unique:' . $model->table . ',email,' . $id . ',id,deleted_at,NULL',
             'dob' => 'required',
             'mobile' => 'numeric',
             'bank_type' => 'required',
             'account_no' => 'required|numeric',
-            'retirement_date'=>'required',
+            'retirement_date' => 'required',
             'profile_image' => 'mimes:jpg,jpeg,png'
         ]);
         $this->validateTpf($validator, $request);
-        
-        if ($validator->fails())
-        {
+
+        if ($validator->fails()) {
             return redirect()->back()->withErrors($validator)->withInput();
-        }
-        else
-        {
+        } else {
             // Store customer details
             $customer = \App\Models\CustomersMasterModel::find($id);
             $customer->first_name = $request->input('first_name');
@@ -259,27 +252,24 @@ class CustomerController extends Controller
             $customer->bank_id = $request->input('bank_type');
             $customer->account_no = $request->input('account_no');
             $customer->job_title = $request->input('job_title');
-			$customer->ministry = $request->input('ministry');
+            $customer->ministry = $request->input('ministry');
             $customer->school = $request->input('school');
-            if (($profile_image = $this->handleUpload($request, $customer->id)) != null)
-            {
+            if (($profile_image = $this->handleUpload($request, $customer->id)) != null) {
                 $customer->profile_image = $profile_image;
             }
-			$customer->retirement_date = $this->sanitizeDate($request->input('retirement_date'));
+            $customer->retirement_date = $this->sanitizeDate($request->input('retirement_date'));
             $customer->width_date = $this->sanitizeDate($request->input('width_date'));
             $customer->status = $request->input('status');
 
-            if($customer->update())
-            {
+            if ($customer->update()) {
                 \App\Models\BeneficiaryModel::where('customer_id', '=', $customer->id)->delete();
-                
+
                 // Let add customer beneficiaries
                 $aBeneficiary = $request->input('beneficiary');
                 $aRelationship = $request->input('relationship');
                 $aPortion = $request->input('portion');
                 $totalLength = count($aBeneficiary);
-                for ($i=0; $i<$totalLength; $i++)
-                {
+                for ($i = 0; $i < $totalLength; $i++) {
                     $beneficiaryObj = new \App\Models\BeneficiaryModel;
                     $beneficiaryObj->customer_id = $customer->id;
                     $beneficiaryObj->beneficiary = $aBeneficiary[$i];
@@ -319,7 +309,7 @@ class CustomerController extends Controller
     {
         if ($dateString == NULL || $dateString == 'dd/mm/yyyy')
             return NULL;
-        
+
         $dateString = str_replace('/', '-', $dateString);
         return date_format(date_create($dateString), 'Y-m-d');
     }
@@ -334,87 +324,80 @@ class CustomerController extends Controller
      */
     private function validateTpf($validator, $request)
     {
-        $validator->after(function ($validator) use ($request) 
-        {
+        $validator->after(function ($validator) use ($request) {
             $model = new \App\Models\CustomersMasterModel;
             $model->get_vars();
-            
+
             // Retrieve user input
-            $category_id=$request->input('customer_category');
-            $tpf_number=substr($request->input('tpf_number'), 0, 1);
-            
-            $customer_category=isset($model->customer_types[$category_id])
+            $category_id = $request->input('customer_category');
+            $tpf_number = substr($request->input('tpf_number'), 0, 1);
+
+            $customer_category = isset($model->customer_types[$category_id])
                 ? strtolower($model->customer_types[$category_id])
                 : NULL;
-            
-            switch ($customer_category)
-            {
+
+            switch ($customer_category) {
                 case 'police':
                 case 'polices':
-                if ($tpf_number!=3)
-                {
-                    $validator->errors()->add('tpf_number', 'The TPF number should start with 3 for '.$customer_category);
-                }
-                break;
-                
+                    if ($tpf_number != 3) {
+                        $validator->errors()->add('tpf_number', 'The TPF number should start with 3 for ' . $customer_category);
+                    }
+                    break;
+
                 case 'teachers':
                 case 'teacher':
-                if ($tpf_number!=2)
-                {
-                    $validator->errors()->add('tpf_number', 'The TPF number should start with 2 for '.$customer_category);
-                }
-                break;
-                
+                    if ($tpf_number != 2) {
+                        $validator->errors()->add('tpf_number', 'The TPF number should start with 2 for ' . $customer_category);
+                    }
+                    break;
+
                 case 'established':
-                if($tpf_number!=1)
-                {
-                    $validator->errors()->add('tpf_number', 'The TPF number should start with 1 for '.$customer_category);
-                }
-                break;
-                
+                    if ($tpf_number != 1) {
+                        $validator->errors()->add('tpf_number', 'The TPF number should start with 1 for ' . $customer_category);
+                    }
+                    break;
+
                 case 'non-establised':
-                if($tpf_number!=7)
-                {
-                    $validator->errors()->add('tpf_number', 'The TPF number should start with 7 for '.$customer_category);
-                }
-                break;
+                    if ($tpf_number != 7) {
+                        $validator->errors()->add('tpf_number', 'The TPF number should start with 7 for ' . $customer_category);
+                    }
+                    break;
 
                 default:
                     $validator->errors()->add('tpf_number', 'The TPF number not recognized');
-                break;
-            } 
+                    break;
+            }
         });
     }
 
     private function handleUpload($request, $customerId)
     {
-        if ( ! $request->hasFile('profile_image') || ! $request->file('profile_image')->isValid())
+        if (! $request->hasFile('profile_image') || ! $request->file('profile_image')->isValid())
             return null;
 
         // Delete the file(s) which uploaded before
-        $upload_path = 'storage/profile/'. $customerId;
-        $files = glob($upload_path .'/*');
-        foreach($files as $file)
-        {
+        $upload_path = 'storage/profile/' . $customerId;
+        $files = glob($upload_path . '/*');
+        foreach ($files as $file) {
             unlink($file);
         }
-        
-        $fileName = time() .'.'. $request->file('profile_image')->getClientOriginalExtension();
+
+        $fileName = time() . '.' . $request->file('profile_image')->getClientOriginalExtension();
         $request->file('profile_image')->move($upload_path, $fileName);
-        return $upload_path .'/'. $fileName;
+        return $upload_path . '/' . $fileName;
     }
 
     public function getStatement($id)
     {
-        if ( ! ($customerObj = \App\Models\CustomersMasterModel::whereRaw("MD5(id)='".$id."'")->first()))
+        if (! ($customerObj = \App\Models\CustomersMasterModel::whereRaw("MD5(id)='" . $id . "'")->first()))
             return redirect('admin/customers');
-        
+
         // Pre-load customer related data
         $customerObj->get_vars();
-        
+
         $this->data['customerObj'] = $customerObj;
         $this->data['loanMasterObj'] = new \App\Models\LoanDetailsModel;
-        
+
         $savingsAmount = ($customerObj->savings_amount != '') ? $customerObj->savings_amount : 0;
         $this->data['savings_amt'] = numberFormat($savingsAmount);
         // $this->data['loanFee']=\App\Models\LoanDetailsModel::join('loan_approved', 'loan_master.id', '=', 'loan_approved.loan_id')->where('loan_master.customer_id', '=', $customerObj->id)->sum('loan_fee');
@@ -426,29 +409,29 @@ class CustomerController extends Controller
         $customerLoans = $customerObj->getCustomerLoanDetails($customerObj->id, 'approved_loans');
         $customerAdvances = $customerObj->getCustomerLoanDetails($customerObj->id, 'approved_advances');
         $generalLoanInfo = $customerObj->calculateLoanAmt($customerLoans, $customerAdvances);
-        
+
         $this->data['customer_loans'] = $customerLoans;
         $this->data['customer_advances'] = $customerAdvances;
         $this->data['generalLoanInfo'] = $generalLoanInfo;
 
         $pdf = PDF::loadView('pdf.customer_history', $this->data);
-        return $pdf->download($customerObj->tpf_number .'-'. date('Y-m-d') .'.pdf');
+        return $pdf->download($customerObj->tpf_number . '-' . date('Y-m-d') . '.pdf');
     }
 
     public function getAdvanceTransactionHistory($id, $loan_id)
     {
-        if ( ! ($customerObj = \App\Models\CustomersMasterModel::select('id')->where('id', '=', $id)->first()))
-            return json_encode(array('status'=>'0', 'msg'=>'No customer found.'));
+        if (! ($customerObj = \App\Models\CustomersMasterModel::select('id')->where('id', '=', $id)->first()))
+            return json_encode(array('status' => '0', 'msg' => 'No customer found.'));
 
         // Get advance transaction history
         $advanceHistory = \App\Models\LoanPaymentLogModel::select('amount_paid', 'actual_amount', 'amount_to_pay', 'quarter')
             ->where('loan_id', '=', $loan_id)
             ->get();
-        
+
         if (count($advanceHistory) <= 0)
-            return json_encode(array('status'=>'1', 'msg'=>'Retrieved successfully.', 'data'=>'<p><b>No transaction history found.</b></p>'));
+            return json_encode(array('status' => '1', 'msg' => 'Retrieved successfully.', 'data' => '<p><b>No transaction history found.</b></p>'));
 
         $html = view('admin.customers.advance_history')->with('advanceHistory', $advanceHistory)->render();
-        return json_encode(array('status'=>'1', 'msg'=>'Retrieved successfully.', 'data'=>$html));
+        return json_encode(array('status' => '1', 'msg' => 'Retrieved successfully.', 'data' => $html));
     }
 }

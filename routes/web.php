@@ -28,6 +28,20 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
+Route::get(
+    'info',
+    function () {
+        return phpinfo();
+    }
+);
+
+Route::get(
+    'laravel_info',
+    function () {
+        return 'Laravel Version: ' . app()->version();
+    }
+);
+
 Route::group(['middleware' => ['admin:web']], function () {
     // Admin index routes
     Route::get('/', [AdminController::class, 'index']);
