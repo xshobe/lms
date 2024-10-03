@@ -5,9 +5,9 @@ namespace App\Http\Controllers\Admin;
 use Illuminate\Http\Request;
 use App\Http\Requests;
 use App\Http\Controllers\Controller;
-use Validator;
-use Session;
+use Illuminate\Support\Facades\Session;
 use Hash;
+use Illuminate\Support\Facades\Validator;
 use PDF;
 
 class CustomerController extends Controller
@@ -17,6 +17,8 @@ class CustomerController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
+
+    protected $data;
     public function index()
     {
         $customerObj = new \App\Models\CustomersMasterModel;
