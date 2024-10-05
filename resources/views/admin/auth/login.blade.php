@@ -15,19 +15,21 @@
             @csrf
             {!! Form::open(['url' => '/admin/postLogin', 'id' => 'userloginform', 'name' => 'userloginform']) !!}
             <div class="form-group has-feedback">
+                <label for=""></label>
                 <input type="text" name="user_name" class="form-control" placeholder="User Name">
                 <span class="glyphicon glyphicon-user form-control-feedback"></span>
             </div>
             <div class="form-group has-feedback">
+                <label for=""></label>
                 <input type="password" name="password" class="form-control" placeholder="Password">
                 <span class="glyphicon glyphicon-lock form-control-feedback"></span>
             </div>
             <!--<div class="form-group has-feedback">
-                        {!! app('captcha')->display() !!}
-                      </div>-->
+                                                {!! app('captcha')->display() !!}
+                                              </div>-->
             <div class="row">
                 <div class="col-xs-4 pull-right">
-                    <button type="submit" class="btn btn-primary btn-block btn-flat">Sign In</button>
+                    <button type="submit" class="mt-1 btn btn-primary btn-block btn-flat">Sign In</button>
                 </div><!-- /.col -->
             </div>
             {!! Form::close() !!}

@@ -21,11 +21,12 @@ scratch. This page gets rid of all links and provides the needed markup only.
     <link rel="stylesheet" href="{{ asset('css/ionic/css/ionic.min.css') }}" />
     <!-- Theme style -->
     <link rel="stylesheet" href="{{ asset('admin_panel/dist/css/AdminLTE.min.css') }}">
+
     <!-- AdminLTE Skins. We have chosen the skin-blue for this starter
           page. However, you can choose any other skin. Make sure you
           apply the skin class to the body tag so the changes take effect.
     -->
-    <!-- <link rel="stylesheet" href="{{ asset('admin_panel/dist/css/skins/skin-blue.min.css') }}"> -->
+    {{-- <!-- <link rel="stylesheet" href="{{ asset('admin_panel/dist/css/skins/skin-blue.min.css') }}"> --> --}}
     <link rel="stylesheet" href="{{ asset('admin_panel/dist/css/skins/_all-skins.min.css') }}">
 
 
@@ -49,6 +50,7 @@ scratch. This page gets rid of all links and provides the needed markup only.
     <script src="{{ asset('admin_panel/dist/js/app.min.js') }}"></script>
 
     <script src="{{ asset('js/custom-functions.js') }}"></script>
+
     <style type="text/css">
         .content-wrapper,
         .right-side,

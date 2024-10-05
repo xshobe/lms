@@ -35,7 +35,7 @@
     </script>
     @include('partials.list_errors')
 
-    {!! Form::open(['route' => ['admin.roles.store'], 'id' => 'roleform', 'name' => 'roleform']) !!}
+    {!! Form::open(['route' => ['roles.store'], 'id' => 'roleform', 'name' => 'roleform']) !!}
     <div class="row">
         <!-- left column -->
         <div class="col-md-12">
