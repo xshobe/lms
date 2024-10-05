@@ -1,0 +1,122 @@
+
+
+/* ##############################################################################################
+	
+To be used with jquery.meanmenu.js by Chris Wharton (http://www.meanthemes.com/plugins/meanmenu/)
+
+################################################################################################# */
+
+/* hide the link until viewport size is reached */
+a.meanmenu-reveal { display: none; }
+
+/* when under viewport size, .mean-container is added to body */
+.menu-container { position:relative; z-index: 9999; }
+
+.mean-container .mean-bar { float:left; width:100%; position:relative; padding:0px 0; top:0px; left:0; z-index: 9999; }
+.mean-container .mean-bar .menu-head { 
+float:left; font-weight:700; font-size:18px; color: #FFFFFF; text-transform:uppercase; padding:8px 3% 8px 5%; width:90%; height:22px; line-height:22px; 
+border: 1px solid #4E7690;
+background: rgba(81,122,148,1);
+background: -moz-linear-gradient(top, rgba(81,122,148,1) 0%, rgba(58,87,114,1) 100%);
+background: -webkit-gradient(left top, left bottom, color-stop(0%, rgba(81,122,148,1)), color-stop(100%, rgba(58,87,114,1)));
+background: -webkit-linear-gradient(top, rgba(81,122,148,1) 0%, rgba(58,87,114,1) 100%);
+background: -o-linear-gradient(top, rgba(81,122,148,1) 0%, rgba(58,87,114,1) 100%);
+background: -ms-linear-gradient(top, rgba(81,122,148,1) 0%, rgba(58,87,114,1) 100%);
+background: linear-gradient(to bottom, rgba(81,122,148,1) 0%, rgba(58,87,114,1) 100%);
+filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#517a94', endColorstr='#3a5772', GradientType=0 );
+}
+.mean-container a.meanmenu-reveal {
+width:25px; height:24px; padding:9px 10px 7px 10px;
+position: absolute; top: 0; right: 0;
+cursor: pointer;
+text-decoration: none; font-size:13px; text-indent: -9999em; line-height: 22px;
+font-size: 1px;
+display: block;
+outline:none;
+background: rgba(200,184,124,1);
+background: -moz-linear-gradient(top, rgba(200,184,124,1) 0%, rgba(161,148,90,1) 100%);
+background: -webkit-gradient(left top, left bottom, color-stop(0%, rgba(200,184,124,1)), color-stop(100%, rgba(161,148,90,1)));
+background: -webkit-linear-gradient(top, rgba(200,184,124,1) 0%, rgba(161,148,90,1) 100%);
+background: -o-linear-gradient(top, rgba(200,184,124,1) 0%, rgba(161,148,90,1) 100%);
+background: -ms-linear-gradient(top, rgba(200,184,124,1) 0%, rgba(161,148,90,1) 100%);
+background: linear-gradient(to bottom, rgba(200,184,124,1) 0%, rgba(161,148,90,1) 100%);
+filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#c8b87c', endColorstr='#a1945a', GradientType=0 );
+}
+.mean-container a.meanmenu-reveal:hover {}
+.mean-container a.meanmenu-reveal.meanclose {/* background:#ffbd16; color:#ffffff;  */}
+.mean-container a.meanmenu-reveal span { display: block; background:#FFFFFF; height: 3px; margin-top: 3px; }
+.mean-container a.meanmenu-reveal:hover span, .mean-container a.meanmenu-reveal.meanclose span { /* background:#abbe20;*/ }
+.mean-container .mean-nav { float: left; width:100%; margin:0; position:absolute; top:41px; }
+
+/*  1st Level Menu  */
+.mean-container .mean-nav ul { 
+float:left; margin: 0; width:99.8%; list-style-type: none; padding:0; 
+border: 1px solid #e4e4e4;
+}
+.mean-container .mean-nav ul li { position: relative; float: left; width:100%; padding:0px; margin:0px; background:#f6f6f6; border-bottom: 1px solid #e4e4e4;  font-size:15px; font-weight:400; }
+.mean-container .mean-nav ul li:hover { ackground:#fff; }
+.mean-container .mean-nav ul li.mean-last { 
+border-bottom:none;
+}
+.mean-container .mean-nav ul li a {
+display: block;
+float: left;
+width: 92%;
+padding:7px 4% 7px !important;
+margin: 0;
+text-align: left;
+text-decoration: none;
+text-transform:none;
+color:#3e3e3e;
+font-size:15px;
+line-height:22px;
+}
+.mean-container .mean-nav ul li:hover a, .mean-nav ul li.active a, .mean-container .mean-nav ul li:focus a , a.selected{
+background: rgba(200,184,124,1);
+background: -moz-linear-gradient(top, rgba(200,184,124,1) 0%, rgba(161,148,90,1) 100%);
+background: -webkit-gradient(left top, left bottom, color-stop(0%, rgba(200,184,124,1)), color-stop(100%, rgba(161,148,90,1)));
+background: -webkit-linear-gradient(top, rgba(200,184,124,1) 0%, rgba(161,148,90,1) 100%);
+background: -o-linear-gradient(top, rgba(200,184,124,1) 0%, rgba(161,148,90,1) 100%);
+background: -ms-linear-gradient(top, rgba(200,184,124,1) 0%, rgba(161,148,90,1) 100%);
+background: linear-gradient(to bottom, rgba(200,184,124,1) 0%, rgba(161,148,90,1) 100%);
+filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#c8b87c', endColorstr='#a1945a', GradientType=0 );
+}
+.mean-container .mean-nav ul li.mean-last a { border-bottom: none; margin-bottom: 0; }
+
+/*  2nd Level Menu  */
+.mean-container .mean-nav ul li ul { border:none; width: 100%; margin:0px 0% 0px;  padding: 0px 0px 0px 0px; background:#f7f7f7!important; }
+.mean-container .mean-nav ul li ul li { border-bottom:1px solid #eeeeee; line-height:20px; background:#ffffff; }
+.mean-container .mean-nav ul li:hover ul li { border-bottom:1px solid #e5e5e5; line-height:20px; background:#f7f7f7!important; }
+.mean-container .mean-nav ul li ul li:hover {  ackground:url(../images/bullet-active.png) 10px 17px no-repeat #ffffff!important; }
+.mean-container .mean-nav ul li ul li.bdr { border-bottom:none; }
+.mean-container .mean-nav ul li ul li.mean-last { -webkit-border-radius:0px; -moz-border-radius:0px; -khtml-border-radius:0px; border-radius:0px; }
+.mean-container .mean-nav ul li ul li a, .mean-nav ul li.active ul li a { color:#2d3e50 !important; ackground:none !important;}
+.mean-container .mean-nav ul li ul li a{ font-size:14px; color:#2d3e50 !important; }
+.mean-container .mean-nav ul li li a { background:url(../img/mobile-arrow.png) 12px 15px no-repeat #dbdbdb!important; width:88.2%; padding:5px 6% 5px 26px!important; font-size:15px; font-weight:400; color:#2d3e50; border-bottom:1px solid #FFFFFF; line-height:30px; visibility: visible; text-transform: none; }
+.mean-container .mean-nav ul li li a:hover, .mean-container .mean-nav ul li ul li:focus a, .mean-container .mean-nav ul li ul li:focus a:hover { background:url(../img/mobile-arrow-hovr.png) 12px 15px no-repeat #6c7d90!important; color:#FFFFFF!important;}
+
+/*  3rd Level Menu  */
+.mean-container .mean-nav ul li li li a { width: 70%; padding: 1em 15%; }
+.mean-container .mean-nav ul li li li li a { width: 60%; padding: 1em 20%; }
+.mean-container .mean-nav ul li li li li li a { width: 50%; padding: 1em 25%; }
+
+/*  Menu Expand  */
+.mean-container .mean-nav ul li a.mean-expand {
+width:60%;
+height: 26px;
+color:#59d9d1;
+font-size:20px;
+border: none !important;
+padding:0px;
+text-align: right;
+position: absolute;
+right: 0; top: 0; 
+z-index: 2;
+font-size:32px;
+padding:7px 4% 7px !important;
+}
+.mean-container .mean-nav ul li a.mean-expand.mean-clicked { font-size:20px!important; padding:5px 4% 0px 13px !important; color:#59d9d1!important; }
+.mean-container .mean-nav ul li a.mean-expand:hover { font-size:20px!important; background: none; }
+.mean-container .mean-push { float: left; width: 100%; padding: 0; margin: 0; clear: both; }
+.mean-nav .wrapper { width: 100%; padding: 0; margin: 0; } 
+

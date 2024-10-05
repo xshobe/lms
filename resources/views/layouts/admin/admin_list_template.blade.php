@@ -17,6 +17,10 @@ scratch. This page gets rid of all links and provides the needed markup only.
 
     <!-- Bootstrap 3.3.5 -->
     <link rel="stylesheet" href="{{ asset('admin_panel/bootstrap/css/bootstrap.min.css') }}">
+
+    {{-- <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet"
+        crossorigin="anonymous"> --}}
+
     <!-- Font Awesome -->
     <link rel="stylesheet" href="{{ asset('css/font-awesome/css/font-awesome.min.css') }}">
     <!-- Ionicons -->
@@ -30,14 +34,37 @@ scratch. This page gets rid of all links and provides the needed markup only.
     <link rel="stylesheet" href="{{ asset('admin_panel/dist/css/skins/skin-blue.min.css') }}">
     <link rel="stylesheet" href="{{ asset('admin_panel/plugins/datatables/dataTables.bootstrap.css') }}">
 
-    <!-- Bootstrap 3.3.5 -->
-    <script src="{{ asset('admin_panel/bootstrap/js/bootstrap.min.js') }}"></script>
+
+    <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
+    <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
+    <!--[if lt IE 9]>
+
+    <![endif]-->
+
+    <!-- REQUIRED JS SCRIPTS -->
 
     <!-- jQuery 2.1.4 -->
-    <script src="{{ asset('admin_panel/plugins/jQuery/jQuery-2.1.4.min.js') }}"></script>
+    <!-- Bootstrap 3.3.5 -->
+    <!--
+        Bootstrap 3.3.5
+    -->
 
-    <script src="{{ asset('admin_panel/plugins/datatables/jquery.dataTables.min.js') }}"></script>
-    <script src="{{ asset('admin_panel/plugins/datatables/dataTables.bootstrap.min.js') }}"></script>
+    <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js" integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN" crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.3/umd/popper.min.js" integrity="sha384-vFJXuSJphROIrBnz7yo7oB41mKfc8JzQZiCq4NCceLEaO4IHwicKwpJf9c9IpFgh" crossorigin="anonymous"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-beta.2/js/bootstrap.min.js" integrity="sha384-alpBpkh1PFOepccYVYDB4do5UnbKysX5WZXm3XxPqe5iKTfUKjNkCk9SaVuEZflJ" crossorigin="anonymous"></script>
+
+    {{-- <script src="https://code.jquery.com/jquery-3.7.1.js"></script> --}}
+    {{-- <script src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/5.3.0/js/bootstrap.bundle.min.js"></script> --}}
+
+    <!-- jQuery 2.1.4 -->
+    {{-- <script src="{{ asset('admin_panel/plugins/jQuery/jQuery-2.1.4.min.js') }}"></script> --}}
+    {{-- <script src="{{ asset('admin_panel/bootstrap/js/bootstrap.min.js') }}"></script> --}}
+
+    <script src="https://cdn.datatables.net/2.1.8/js/dataTables.js"></script>
+    <script src="https://cdn.datatables.net/2.1.8/js/dataTables.bootstrap5.js"></script>
+
+    {{-- <script src="{{ asset('admin_panel/plugins/datatables/jquery.dataTables.min.js') }}"></script>
+    <script src="{{ asset('admin_panel/plugins/datatables/dataTables.bootstrap.min.js') }}"></script> --}}
     <!-- SlimScroll -->
     <script src="{{ asset('admin_panel/plugins/slimScroll/jquery.slimscroll.min.js') }}"></script>
     <!-- FastClick -->
