@@ -51,7 +51,7 @@
 
     <!-- detailed report starts here -->
     <div class="row">
-        <div class="col-xs-12">
+        <div class="col-xs-12 ml-3">
             <div id="output-display"></div>
         </div>
     </div>
